@@ -1,0 +1,22 @@
+(1) build the docker image
+
+docker build -t my-apache2 .
+
+
+(2) run the image
+
+docker run -p 80:80 -dit --name my-app my-apache2
+
+(3)
+
+access address http://localhost or http://127.0.0.1
+
+
+(4) to check what is running
+
+docker ps -a
+
+(5) To stop and remove the container
+
+docker stop my-app
+docker rm my-app
