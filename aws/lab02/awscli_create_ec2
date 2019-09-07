@@ -1,0 +1,38 @@
+(1) Create a security group
+
+aws ec2 create-security-group --group-name joey-ec2 --description "security group for development environment"
+
+
+(2) -> get the group id
+
+{
+    "GroupId": "sg-028221eb0918ee9c9"
+}
+
+
+
+(3) Authorise inbound traffic for ssh
+aws ec2 authorize-security-group-ingress --group-name joey-ec2 --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+
+
+(4) Create a key pair that will allow you to ssh to the EC2 instance
+aws ec2 create-key-pair --key-name joey-key --query 'KeyMaterial' --output text > joey-key.pem
+
+
+(5) Create the instance and note the instance id
+aws ec2 run-instances --image-id ami-d38a4ab1 --security-group-ids joey-ec2 --count 1 --instance-type t2.micro --key-name joey-key --query 'Instances[0].InstanceId'
+
+instance id: "i-049363c824904d560"
+
+(6) get the ip address
+aws ec2 describe-instances --instance-ids i-049363c824904d560 --query 'Reservations[0].Instances[0].PublicIpAddress'
+
+public ip: "13.210.142.131"
+
+(7) Connect to the instance
+ssh -i joey-key.pem ubuntu@13.210.142.131
+
+(8) Once you have finished, log onto the console and terminate the instance or
+aws ec2 terminate-instances --instance-ids i-<your instance id>
+
